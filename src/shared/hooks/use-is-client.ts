@@ -1,0 +1,7 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+
+export function useIsClient() {
+  return useSyncExternalStore(() => () => undefined, () => true, () => false);
+}
