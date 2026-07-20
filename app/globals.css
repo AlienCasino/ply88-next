@@ -4,7 +4,8 @@
 
 :root {
   --radius: 0.5rem;
-  --app-max-width: min(100vw, calc(100dvh * 0.5622));
+  --app-max-width: min(100dvw, 460px);
+  --app-shell-left: calc((100dvw - var(--app-max-width)) / 2);
   --app-header-height: 56px;
   --app-bottom-nav-height: 74px;
   color-scheme: light;
@@ -43,28 +44,33 @@ input {
   min-height: 100dvh;
   background-color: #222832;
   background-image:
-    radial-gradient(circle at 18px 18px, rgb(143 172 217 / 0.055) 0 10px, transparent 11px),
-    radial-gradient(circle at 70px 68px, rgb(143 172 217 / 0.045) 0 13px, transparent 14px),
-    linear-gradient(135deg, transparent 0 42%, rgb(143 172 217 / 0.04) 42% 47%, transparent 47%),
-    linear-gradient(45deg, transparent 0 43%, rgb(143 172 217 / 0.035) 43% 48%, transparent 48%);
-  background-size: 92px 92px, 118px 118px, 96px 96px, 124px 124px;
-}
-
-.a66-home::before {
-  pointer-events: none;
-  content: "FIFA  ⚽  🏆  FIFA  ⚽";
-  position: fixed;
-  inset: 110px 0 86px;
-  z-index: 0;
-  margin: 0 auto;
-  width: var(--app-max-width);
-  overflow: hidden;
-  color: rgb(143 172 217 / 0.055);
-  font-size: 33px;
-  font-weight: 900;
-  line-height: 2.1;
-  transform: rotate(-30deg);
-  word-spacing: 28px;
+    radial-gradient(
+      circle at 18px 18px,
+      rgb(143 172 217 / 0.055) 0 10px,
+      transparent 11px
+    ),
+    radial-gradient(
+      circle at 70px 68px,
+      rgb(143 172 217 / 0.045) 0 13px,
+      transparent 14px
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0 42%,
+      rgb(143 172 217 / 0.04) 42% 47%,
+      transparent 47%
+    ),
+    linear-gradient(
+      45deg,
+      transparent 0 43%,
+      rgb(143 172 217 / 0.035) 43% 48%,
+      transparent 48%
+    );
+  background-size:
+    92px 92px,
+    118px 118px,
+    96px 96px,
+    124px 124px;
 }
 
 .a66-home > * {
@@ -79,7 +85,12 @@ input {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 0 36%, rgb(255 255 255 / 0.18) 46%, transparent 56%);
+  background: linear-gradient(
+    110deg,
+    transparent 0 36%,
+    rgb(255 255 255 / 0.18) 46%,
+    transparent 56%
+  );
   transform: translateX(-120%);
   animation: a66-shine 3.8s ease-in-out infinite;
 }
@@ -109,7 +120,7 @@ input {
 
 .a66-drawer-overlay,
 .a66-side-drawer {
-  left: calc((100vw - var(--app-max-width)) / 2);
+  left: var(--app-shell-left);
 }
 
 .a66-drawer-overlay[data-state="open"] {
@@ -132,28 +143,13 @@ input {
   will-change: clip-path, opacity;
 }
 
-.a66-bottom-nav::before,
-.a66-bottom-nav::after {
-  pointer-events: none;
-  content: "";
-  position: absolute;
-  bottom: -38px;
-  width: 112px;
-  height: 72px;
-  border-radius: 999px 999px 0 0;
-  background:
-    radial-gradient(circle at 50% 100%, #2d3541 0 42%, transparent 43%),
-    conic-gradient(from 210deg, #18bf60, #ffe85a, #2b75ff, #7d4cff, #18bf60);
+.a66-side-drawer {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.a66-bottom-nav::before {
-  left: -28px;
-  transform: rotate(-16deg);
-}
-
-.a66-bottom-nav::after {
-  right: -28px;
-  transform: rotate(16deg);
+.a66-side-drawer::-webkit-scrollbar {
+  display: none;
 }
 
 .a66-nav-mascot {
@@ -282,8 +278,16 @@ input {
 
 .a66-game-art {
   background:
-    radial-gradient(circle at 72% 22%, rgb(255 255 255 / 0.45), transparent 13%),
-    radial-gradient(circle at 20% 18%, rgb(255 255 255 / 0.23), transparent 18%),
+    radial-gradient(
+      circle at 72% 22%,
+      rgb(255 255 255 / 0.45),
+      transparent 13%
+    ),
+    radial-gradient(
+      circle at 20% 18%,
+      rgb(255 255 255 / 0.23),
+      transparent 18%
+    ),
     linear-gradient(145deg, var(--card-a), var(--card-b) 58%, var(--card-c));
 }
 

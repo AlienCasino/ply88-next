@@ -27,20 +27,20 @@ export function CasinoHeader({
         </button>
         <BrandMark compact />
         <div className="flex min-w-0 items-center gap-2">
-          <Button
-            size="sm"
+          <button
+            type="button"
             onClick={() => onOpenAuth("login")}
-            className="h-8 w-[52px] rounded-[6px] bg-[#2c3445] px-0 text-xs text-white hover:bg-[#344868]"
+            className="grid h-9 min-w-[76px] place-items-center rounded-[8px] bg-brand-gold px-2 text-sm text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.08)] transition hover:brightness-105"
           >
             Login
-          </Button>
-          <Button
-            size="sm"
+          </button>
+          <button
+            type="button"
             onClick={() => onOpenAuth("register")}
-            className="h-8 w-[66px] rounded-[6px] bg-brand-gold px-0 text-xs font-bold text-brand-gold-foreground hover:bg-[#f6d26f]"
+            className="grid h-9 min-w-[84px] place-items-center rounded-[8px] border border-brand-gold px-2 text-sm text-brand-gold transition hover:bg-brand-gold/10"
           >
             Registro
-          </Button>
+          </button>
         </div>
       </div>
     </header>

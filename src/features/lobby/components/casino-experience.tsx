@@ -79,7 +79,7 @@ export function CasinoExperience({ screen = "home" }: CasinoExperienceProps) {
       <button
         type="button"
         onClick={() => setSupportOpen(true)}
-        className="fixed bottom-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom)+16px)] right-[max(14px,calc((100vw-var(--app-max-width))/2+14px))] z-30 grid size-12 place-items-center rounded-full bg-brand-gold text-[#1d222c] shadow-lg outline-none ring-brand-gold/40 active:scale-95 focus-visible:ring-2"
+        className="fixed bottom-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom)+16px)] right-[calc(var(--app-shell-left)+14px)] z-30 grid size-12 place-items-center rounded-full bg-brand-gold text-[#1d222c] shadow-lg outline-none ring-brand-gold/40 active:scale-95 focus-visible:ring-2"
         aria-label="Atendimento ao cliente"
       >
         <Headphones className="size-6" />
@@ -561,17 +561,17 @@ function MenuDrawer({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/55">
-      <aside className="h-full w-[82%] max-w-[340px] bg-[#1d222c] p-4 shadow-2xl">
-        <div className="flex items-center justify-between">
-          <Image src="/a66/logo.png" alt="A66BET" width={132} height={40} className="h-10 w-auto" />
+    <div className="fixed bottom-0 top-0 left-[var(--app-shell-left)] z-50 w-[var(--app-max-width)] bg-black/45 backdrop-blur-[4px]">
+      <aside className="h-full w-[238px] max-w-[70vw] bg-[#1d222c] px-3 py-3 shadow-[12px_0_28px_rgba(0,0,0,.35)]">
+        <div className="flex h-11 items-center justify-between">
+          <Image src="/a66/logo.png" alt="A66BET" width={132} height={40} className="h-8 w-auto" />
           <button type="button" onClick={onClose} className="grid size-8 place-items-center text-nav-muted" aria-label="Fechar">
-            <X className="size-5" />
+            <X className="size-4" />
           </button>
         </div>
-        <div className="mt-5 space-y-2">
+        <div className="mt-3 space-y-1.5">
           {items.map(({ label, icon: Icon, href }) => (
-            <a key={label} href={href} className="flex h-12 items-center gap-3 rounded-[7px] bg-[#2c3445] px-3 text-sm font-bold">
+            <a key={label} href={href} className="flex h-11 items-center gap-3 rounded-[7px] bg-[#2c3445] px-3 text-sm font-bold">
               <Icon className="size-5 text-brand-gold" />
               {label}
             </a>
