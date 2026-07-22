@@ -1,6 +1,10 @@
-export const env = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "",
-};
+import "server-only";
 
-export type AppEnv = typeof env;
+function readServerEnv(name: string) {
+  const value = process.env[name]?.trim();
+  return value ? value : undefined;
+}
+
+export const serverEnv = {
+  apiUrl: readServerEnv("API_URL") ?? readServerEnv("NEXT_PUBLIC_API_URL"),
+} as const;
