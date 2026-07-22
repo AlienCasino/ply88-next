@@ -73,10 +73,6 @@ input {
     124px 124px;
 }
 
-.a66-home > * {
-  z-index: 1;
-}
-
 .a66-hero-frame {
   animation: a66-hero-in 460ms ease-out both;
 }
@@ -149,6 +145,15 @@ input {
 }
 
 .a66-side-drawer::-webkit-scrollbar {
+  display: none;
+}
+
+.a66-hidden-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.a66-hidden-scrollbar::-webkit-scrollbar {
   display: none;
 }
 

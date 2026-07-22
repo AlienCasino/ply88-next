@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
+  ChevronDown,
   CircleHelp,
   CircleUserRound,
   Clock3,
@@ -32,6 +33,7 @@ import {
 } from "lucide-react";
 import { Dialog as DrawerPrimitive } from "radix-ui";
 import { routes } from "@/core/constants/routes";
+import { A66DepositDrawer, BalancePill } from "./a66-deposit-drawer";
 
 const miniBanners = [
   "/a66/home-small-partner.gif",
@@ -170,11 +172,43 @@ type CardStyle = React.CSSProperties & {
   "--mark": string;
 };
 
-export function A66HomePage() {
+type A66HomeViewer = {
+  balance: string;
+};
+
+export function A66HomePage({ viewer = null }: { viewer?: A66HomeViewer | null }) {
+  const [depositOpen, setDepositOpen] = useState(false);
+  const isAuthenticated = Boolean(viewer);
+
+  useEffect(() => {
+    const syncDepositRoute = () => {
+      setDepositOpen(new URLSearchParams(window.location.search).has("deposit"));
+    };
+
+    syncDepositRoute();
+    window.addEventListener("popstate", syncDepositRoute);
+
+    return () => window.removeEventListener("popstate", syncDepositRoute);
+  }, []);
+
+  const openDeposit = () => {
+    setDepositOpen(true);
+    const url = new URL(window.location.href);
+    url.searchParams.set("deposit", "");
+    window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  };
+
+  const closeDeposit = () => {
+    setDepositOpen(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("deposit");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  };
+
   return (
     <DrawerPrimitive.Root>
       <div className="a66-home relative text-white">
-        <TopChrome />
+        <TopChrome viewer={viewer} onDeposit={openDeposit} />
         <main className="pb-[calc(76px+env(safe-area-inset-bottom))]">
           <HeroBlock />
           <NoticeStrip />
@@ -188,16 +222,27 @@ export function A66HomePage() {
         </main>
         <A66SideDrawer />
         <FloatingPromos />
-        <HomeBottomNav />
+        <HomeBottomNav authenticated={isAuthenticated} onDeposit={openDeposit} />
+        <A66DepositDrawer
+          open={depositOpen}
+          balance={viewer?.balance ?? "0,00"}
+          onClose={closeDeposit}
+        />
       </div>
     </DrawerPrimitive.Root>
   );
 }
 
-function TopChrome() {
+function TopChrome({
+  viewer,
+  onDeposit,
+}: {
+  viewer?: A66HomeViewer | null;
+  onDeposit: () => void;
+}) {
   return (
     <div className="sticky top-0 z-40">
-      <HomeHeader />
+      <HomeHeader viewer={viewer} onDeposit={onDeposit} />
     </div>
   );
 }
@@ -218,7 +263,13 @@ function TopChrome() {
 //   );
 // }
 
-function HomeHeader() {
+function HomeHeader({
+  viewer,
+  onDeposit,
+}: {
+  viewer?: A66HomeViewer | null;
+  onDeposit: () => void;
+}) {
   return (
     <header className="relative flex h-[62px] items-center border-b border-[#344868] bg-[#151b25] px-2">
       <DrawerPrimitive.Trigger asChild>
@@ -237,20 +288,34 @@ function HomeHeader() {
         priority
         className="h-[39px] w-auto"
       />
-      <div className="ml-auto flex items-center gap-2">
-        <Link
-          href={routes.login}
-          className="grid h-9 min-w-[76px] place-items-center rounded-[8px] bg-brand-gold px-2 text-sm text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.08)] transition hover:brightness-105"
-        >
-          Login
-        </Link>
-        <Link
-          href={routes.register}
-          className="grid h-9 min-w-[84px] place-items-center rounded-[8px] border border-brand-gold px-2 text-sm text-brand-gold transition hover:bg-brand-gold/10"
-        >
-          Registro
-        </Link>
-      </div>
+      {viewer ? (
+        <div className="ml-auto flex min-w-0 items-center gap-2">
+          <BalancePill balance={viewer.balance} />
+          <button
+            type="button"
+            onClick={onDeposit}
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-[8px] bg-brand-gold px-3 text-sm font-medium text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.08)] transition hover:brightness-105"
+          >
+            Depósito
+            <ChevronDown className="size-4" />
+          </button>
+        </div>
+      ) : (
+        <div className="ml-auto flex items-center gap-2">
+          <Link
+            href={routes.login}
+            className="grid h-9 min-w-[76px] place-items-center rounded-[8px] bg-brand-gold px-2 text-sm text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.08)] transition hover:brightness-105"
+          >
+            Login
+          </Link>
+          <Link
+            href={routes.register}
+            className="grid h-9 min-w-[84px] place-items-center rounded-[8px] border border-brand-gold px-2 text-sm text-brand-gold transition hover:bg-brand-gold/10"
+          >
+            Registro
+          </Link>
+        </div>
+      )}
     </header>
   );
 }
@@ -439,13 +504,22 @@ function SportsPreview() {
         </p>
         <p className="text-lg font-black leading-none">0-0</p>
         <p className="text-xs text-[#6e8ab7]">Movimento da partida</p>
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          {["Casa\n2,58", "Empate\n2,65", "Visitante\n3,72"].map((odd) => (
+        <div className="mt-2 grid min-w-0 grid-cols-3 gap-1.5">
+          {[
+            ["House", "2.58"],
+            ["Draw", "2.65"],
+            ["Visitor", "3.72"],
+          ].map(([label, value]) => (
             <button
-              key={odd}
-              className="whitespace-pre rounded-[5px] border border-[#344868] bg-[#1d2635] py-1 text-xs leading-tight"
+              key={label}
+              className="min-w-0 overflow-hidden rounded-[5px] border border-[#344868] bg-[#1d2635] px-1 py-1 text-center leading-tight"
             >
-              {odd}
+              <span className="block truncate text-[10px] text-[#8facd9]">
+                {label}
+              </span>
+              <span className="block text-[12px] font-bold text-white">
+                {value}
+              </span>
             </button>
           ))}
         </div>
@@ -490,7 +564,9 @@ function GameSection({
           {icon ? <span className="text-xl">{icon}</span> : null}
           {title}
         </h2>
-        <button className="text-sm text-[#6e8ab7]">Tudo</button>
+        <Link href={routes.games} className="text-sm text-[#6e8ab7]">
+          Tudo
+        </Link>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {games.map(([name, brand, a, b, c, mark], index) => (
@@ -737,44 +813,76 @@ function FloatingPromos() {
   );
 }
 
-function HomeBottomNav() {
-  const items = [
-    {
-      label: "Começar",
-      icon: Home,
-      href: routes.home,
-      active: true,
-    },
-    { label: "Ofertas", icon: Gift, href: routes.promotions },
-    { label: "Login", icon: DoorOpen, href: routes.login },
-    {
-      label: "Registro",
-      icon: CircleUserRound,
-      href: routes.register,
-    },
-    { label: "Perfil", icon: Search, href: routes.profile },
-  ];
+function HomeBottomNav({
+  authenticated,
+  onDeposit,
+}: {
+  authenticated: boolean;
+  onDeposit: () => void;
+}) {
+  const items = authenticated
+    ? [
+        {
+          label: "Começar",
+          icon: Home,
+          href: routes.home,
+          active: true,
+        },
+        { label: "Ofertas", icon: Gift, href: routes.promotions },
+        { label: "Depósito", icon: WalletCards, action: onDeposit },
+        { label: "Saques", icon: TicketPercent, href: routes.wallet },
+        { label: "Perfil", icon: CircleUserRound, href: routes.profile },
+      ]
+    : [
+        {
+          label: "Começar",
+          icon: Home,
+          href: routes.home,
+          active: true,
+        },
+        { label: "Ofertas", icon: Gift, href: routes.promotions },
+        { label: "Login", icon: DoorOpen, href: routes.login },
+        {
+          label: "Registro",
+          icon: CircleUserRound,
+          href: routes.register,
+        },
+        { label: "Perfil", icon: Search, href: routes.profile },
+      ];
 
   return (
     <nav className="a66-bottom-nav fixed bottom-0 left-1/2 z-50 h-[calc(76px+env(safe-area-inset-bottom))] w-[var(--app-max-width)] -translate-x-1/2 overflow-visible border-t border-[#344868] bg-[#2d3541] pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_20px_rgba(0,0,0,.18)]">
       <div className="relative z-10 grid h-[76px] grid-cols-5">
-        {items.map(({ label, icon: Icon, href, active }) => (
-          <Link
-            key={label}
-            href={href}
-            className={`relative flex min-w-0 flex-col items-center justify-center gap-[4px] pt-1 text-[13px] transition hover:text-white ${active ? "text-brand-gold" : "text-[#8facd9]"}`}
-          >
-            <span className="relative grid h-7 place-items-center">
-              <Icon className="size-[22px]" strokeWidth={active ? 2 : 1.65} />
-              {label === "Registro" ? (
-                <span className="absolute -right-2 top-1 text-xs font-bold text-brand-gold">
-                  +
-                </span>
-              ) : null}
-            </span>
-            <span className="relative text-[13px] leading-none">{label}</span>
-          </Link>
-        ))}
+        {items.map(({ label, icon: Icon, active, ...item }) => {
+          const className = `relative flex min-w-0 flex-col items-center justify-center gap-[4px] pt-1 text-[13px] transition hover:text-white ${active ? "text-brand-gold" : "text-[#8facd9]"}`;
+          const content = (
+            <>
+              <span className="relative grid h-7 place-items-center">
+                <Icon className="size-[22px]" strokeWidth={active ? 2 : 1.65} />
+                {label === "Registro" ? (
+                  <span className="absolute -right-2 top-1 text-xs font-bold text-brand-gold">
+                    +
+                  </span>
+                ) : null}
+              </span>
+              <span className="relative text-[13px] leading-none">{label}</span>
+            </>
+          );
+
+          if ("action" in item) {
+            return (
+              <button key={label} type="button" onClick={item.action} className={className}>
+                {content}
+              </button>
+            );
+          }
+
+          return (
+            <Link key={label} href={item.href} className={className}>
+              {content}
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );
