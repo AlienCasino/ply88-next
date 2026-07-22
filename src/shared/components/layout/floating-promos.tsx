@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowUpToLine } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -7,6 +8,7 @@ export function FloatingPromos() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [showLeftPromos, setShowLeftPromos] = useState(true);
   const [showRightPromos, setShowRightPromos] = useState(true);
+  const tuckedOffset = 30;
 
   useEffect(() => {
     let scrollEndTimer: number | undefined;
@@ -29,6 +31,10 @@ export function FloatingPromos() {
     };
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       <div className="a66-floating-layer pointer-events-none fixed inset-y-[62px] left-[var(--app-shell-left)] z-30 w-[var(--app-max-width)] overflow-hidden">
@@ -36,7 +42,9 @@ export function FloatingPromos() {
           <div
             className="absolute bottom-[calc(64px+env(safe-area-inset-bottom))] left-0 flex flex-col items-start gap-2 transition-transform duration-300 ease-out"
             style={{
-              transform: isScrolling ? "translateX(-42px)" : "translateX(0)",
+              transform: isScrolling
+                ? `translateX(-${tuckedOffset}px)`
+                : "translateX(0)",
             }}
           >
             <div className="relative grid size-16 place-items-center">
@@ -83,7 +91,9 @@ export function FloatingPromos() {
           <div
             className="absolute bottom-[calc(64px+env(safe-area-inset-bottom))] right-0 flex flex-col items-end gap-2 transition-transform duration-300 ease-out"
             style={{
-              transform: isScrolling ? "translateX(44px)" : "translateX(0)",
+              transform: isScrolling
+                ? `translateX(${tuckedOffset}px)`
+                : "translateX(0)",
             }}
           >
             <div className="relative grid size-16 place-items-center">
@@ -127,8 +137,14 @@ export function FloatingPromos() {
           </div>
         ) : null}
       </div>
-      <button className="fixed bottom-[calc(86px+env(safe-area-inset-bottom))] right-[calc(var(--app-shell-left)+8px)] z-40 rounded-[8px] border border-[#344868] bg-[#263146] px-2 py-1.5 text-xs font-bold text-white">
-        🧭 TOPO
+      <button
+        type="button"
+        onClick={scrollToTop}
+        className="fixed bottom-[calc(86px+env(safe-area-inset-bottom))] right-[calc(var(--app-shell-left)+8px)] z-40 inline-flex items-center gap-1 rounded-[7px] border border-[#344868] bg-[#263146] px-1.5 py-1 text-[11px] font-bold leading-none text-white shadow-[0_5px_12px_rgba(0,0,0,.25)] transition hover:border-brand-gold hover:text-brand-gold"
+        aria-label="Voltar ao topo"
+      >
+        <ArrowUpToLine className="size-3.5" strokeWidth={2.3} />
+        TOPO
       </button>
     </>
   );

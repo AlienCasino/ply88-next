@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/core/constants/routes";
-import type { HomeGame, HomeGameCardStyle } from "../types";
+import type { HomeGameCard, HomeGameCardStyle } from "../types";
 
 export function GameSection({
   title,
@@ -9,7 +10,7 @@ export function GameSection({
 }: {
   title: string;
   icon?: string;
-  games: HomeGame[];
+  games: HomeGameCard[];
 }) {
   return (
     <section className="mt-4 px-3">
@@ -23,13 +24,15 @@ export function GameSection({
         </Link>
       </div>
       <div className="grid grid-cols-3 gap-3">
-        {games.map(([name, brand, a, b, c, mark], index) => (
+        {games.map((game) => (
           <GameTile
-            key={`${title}-${name}-${brand}-${index}`}
-            name={name}
-            brand={brand}
-            colors={[a, b, c]}
-            mark={mark ?? brand}
+            key={game.id}
+            name={game.name}
+            brand={game.brand}
+            href={game.href}
+            imageUrl={game.imageUrl}
+            colors={game.colors}
+            mark={game.mark}
           />
         ))}
       </div>
@@ -40,12 +43,16 @@ export function GameSection({
 export function GameTile({
   name,
   brand,
+  href = routes.games,
+  imageUrl,
   colors,
   mark,
 }: {
   name: string;
   brand: string;
-  colors: string[];
+  href?: string;
+  imageUrl?: string | null;
+  colors: [string, string, string];
   mark: string;
 }) {
   const style: HomeGameCardStyle = {
@@ -56,8 +63,21 @@ export function GameTile({
   };
 
   return (
-    <article className="relative aspect-[156/205] overflow-hidden rounded-[13px] bg-[#2c3445] shadow-[0_8px_14px_rgba(0,0,0,.2)]">
-      <div className="a66-game-art absolute inset-0" style={style} />
+    <Link
+      href={href}
+      className="relative block aspect-[156/205] overflow-hidden rounded-[13px] bg-[#2c3445] shadow-[0_8px_14px_rgba(0,0,0,.2)]"
+    >
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={name}
+          fill
+          sizes="(max-width: 520px) 31vw, 148px"
+          className="object-cover"
+        />
+      ) : (
+        <div className="a66-game-art absolute inset-0" style={style} />
+      )}
       <span className="absolute left-1 top-1 grid size-6 place-items-center rounded-full bg-[#ffaa09] text-sm">
         👍
       </span>
@@ -70,7 +90,7 @@ export function GameTile({
         </p>
         <p className="text-xs font-bold text-white/75">{brand}</p>
       </div>
-    </article>
+    </Link>
   );
 }
 

@@ -1,16 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   CircleUserRound,
   DoorOpen,
   Gift,
   Home,
+  type LucideIcon,
   Search,
   TicketPercent,
   WalletCards,
 } from "lucide-react";
 import { routes } from "@/core/constants/routes";
+
+type HomeBottomNavItem = {
+  label: string;
+  icon: LucideIcon;
+  href?: string;
+  action?: () => void;
+};
 
 export function HomeBottomNav({
   authenticated,
@@ -19,16 +28,17 @@ export function HomeBottomNav({
   authenticated: boolean;
   onDeposit: () => void;
 }) {
-  const items = authenticated
+  const pathname = usePathname();
+  const items: HomeBottomNavItem[] = authenticated
     ? [
-        { label: "Começar", icon: Home, href: routes.home, active: true },
+        { label: "Começar", icon: Home, href: routes.home },
         { label: "Ofertas", icon: Gift, href: routes.promotions },
         { label: "Depósito", icon: WalletCards, action: onDeposit },
         { label: "Saques", icon: TicketPercent, href: routes.wallet },
         { label: "Perfil", icon: CircleUserRound, href: routes.profile },
       ]
     : [
-        { label: "Começar", icon: Home, href: routes.home, active: true },
+        { label: "Começar", icon: Home, href: routes.home },
         { label: "Ofertas", icon: Gift, href: routes.promotions },
         { label: "Login", icon: DoorOpen, href: routes.login },
         { label: "Registro", icon: CircleUserRound, href: routes.register },
@@ -36,27 +46,35 @@ export function HomeBottomNav({
       ];
 
   return (
-    <nav className="a66-bottom-nav fixed bottom-0 left-1/2 z-50 h-[calc(76px+env(safe-area-inset-bottom))] w-[var(--app-max-width)] -translate-x-1/2 overflow-visible border-t border-[#344868] bg-[#2d3541] pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_20px_rgba(0,0,0,.18)]">
-      <div className="relative z-10 grid h-[76px] grid-cols-5">
-        {items.map(({ label, icon: Icon, active, ...item }) => {
-          const className = `relative flex min-w-0 flex-col items-center justify-center gap-[4px] pt-1 text-[13px] transition hover:text-white ${
-            active ? "text-brand-gold" : "text-[#8facd9]"
+    <nav className="a66-bottom-nav fixed inset-x-0 bottom-0 z-50 mx-auto h-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom))] max-w-[var(--app-max-width)] overflow-visible border-t border-[#344868] bg-[#2d3541] pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_10px_rgba(0,0,0,.22)]">
+      <div className="relative z-10 grid h-[var(--app-bottom-nav-height)] grid-cols-5">
+        {items.map((item) => {
+          const { label, icon: Icon } = item;
+          const isActive = item.href
+            ? item.href === routes.home
+              ? pathname === routes.home
+              : pathname.startsWith(item.href)
+            : false;
+          const className = `relative flex h-full min-w-0 appearance-none flex-col items-center justify-center gap-1 overflow-hidden px-1 pt-1 text-center text-[11px] font-medium leading-none outline-none transition-colors hover:text-white focus-visible:text-white ${
+            isActive ? "text-brand-gold" : "text-[#8facd9]"
           }`;
           const content = (
             <>
-              <span className="relative grid h-7 place-items-center">
-                <Icon className="size-[22px]" strokeWidth={active ? 2 : 1.65} />
+              <span className="relative grid size-6 shrink-0 place-items-center">
+                <Icon className="size-5 shrink-0" strokeWidth={1.85} />
                 {label === "Registro" ? (
-                  <span className="absolute -right-2 top-1 text-xs font-bold text-brand-gold">
+                  <span className="absolute right-0 top-0 grid size-2.5 place-items-center text-xs font-bold leading-none text-brand-gold">
                     +
                   </span>
                 ) : null}
               </span>
-              <span className="relative text-[13px] leading-none">{label}</span>
+              <span className="relative block h-[13px] max-w-full truncate px-1 text-[11px] leading-[13px]">
+                {label}
+              </span>
             </>
           );
 
-          if ("action" in item) {
+          if (item.action) {
             return (
               <button
                 key={label}
@@ -70,7 +88,12 @@ export function HomeBottomNav({
           }
 
           return (
-            <Link key={label} href={item.href} className={className}>
+            <Link
+              key={label}
+              href={item.href ?? routes.home}
+              className={className}
+              aria-current={isActive ? "page" : undefined}
+            >
               {content}
             </Link>
           );

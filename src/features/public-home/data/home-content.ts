@@ -1,4 +1,10 @@
-import type { HomeGame, HomeSportCard } from "../types";
+import type {
+  HomeCategoryRailItem,
+  HomeGame,
+  HomeGameCard,
+  HomeGameCategorySection,
+  HomeSportCard,
+} from "../types";
 
 export const miniBanners = [
   "/a66/home-small-partner.gif",
@@ -6,12 +12,12 @@ export const miniBanners = [
   "/a66/home-small-app.gif",
 ];
 
-export const categoryRailItems = [
-  { label: "Popular", icon: "🔥" },
-  { label: "Slots", icon: "777" },
-  { label: "Pescaria", icon: "🐬" },
-  { label: "Minijogos", icon: "💎" },
-  { label: "Cartas", icon: "🃏" },
+export const categoryRailItems: HomeCategoryRailItem[] = [
+  { id: "popular", label: "Popular", href: "/games", iconText: "🔥" },
+  { id: "slots", label: "Slots", href: "/games", iconText: "777" },
+  { id: "fishery", label: "Pescaria", href: "/games", iconText: "🐬" },
+  { id: "mini-games", label: "Minijogos", href: "/games", iconText: "💎" },
+  { id: "cards", label: "Cartas", href: "/games", iconText: "🃏" },
 ];
 
 export const popularGames: HomeGame[] = [
@@ -30,6 +36,21 @@ export const slotProviders: HomeGame[] = [
   ["WG Slots", "WG", "#b897ff", "#a146ff", "#5424a8"],
   ["JDB Slots", "JDB", "#2e8efc", "#52d5ff", "#0857bc"],
   ["CP Slots", "CP", "#44beee", "#82e8ff", "#2b6994"],
+];
+
+export const fallbackGameSections: HomeGameCategorySection[] = [
+  {
+    id: "fallback-popular",
+    title: "Popular",
+    iconUrl: null,
+    games: toFallbackCards(popularGames, "popular"),
+  },
+  {
+    id: "fallback-slots",
+    title: "Slots",
+    iconUrl: null,
+    games: toFallbackCards(slotProviders, "slots"),
+  },
 ];
 
 export const sportCards: HomeSportCard[] = [
@@ -52,3 +73,15 @@ export const footerLinks = [
   ],
   ["Suporte", "Suporte", "Bônus de Suporte", "A66BET"],
 ];
+
+function toFallbackCards(games: HomeGame[], section: string): HomeGameCard[] {
+  return games.map(([name, brand, a, b, c, mark], index) => ({
+    id: `${section}-${name}-${brand}-${index}`,
+    name,
+    brand,
+    href: "/games",
+    imageUrl: null,
+    colors: [a, b, c],
+    mark: mark ?? brand,
+  }));
+}

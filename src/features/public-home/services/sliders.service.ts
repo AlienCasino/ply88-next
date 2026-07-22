@@ -2,8 +2,10 @@ import "server-only";
 
 import { z } from "zod";
 import { serverEnv } from "@/core/env/env";
+import { localizeFrontendHref } from "@/core/services/frontend-url";
 import { serverFetch } from "@/core/services/server-fetch";
 import type { HomeSidebarSliderContent } from "@/shared/components/layout/types";
+import type { HomeCategoryRailItem } from "../types";
 
 const sliderSubCategorySchema = z.object({
   gameSubCategoryId: z.string().nullable().optional(),
@@ -31,13 +33,7 @@ const sliderSchema = z.object({
 const sliderListSchema = z.array(sliderSchema);
 
 export async function getLeftSidebarSliders(): Promise<HomeSidebarSliderContent> {
-  const result = await serverFetch<z.infer<typeof sliderListSchema>>(
-    "/sliders?sliderType=left-sidebar",
-    {
-      next: { revalidate: 300 },
-      parse: (data) => sliderListSchema.parse(data),
-    },
-  );
+  const result = await fetchSlidersByType("left-sidebar");
 
   if (!result.ok) {
     if (process.env.NODE_ENV !== "production") {
@@ -46,23 +42,23 @@ export async function getLeftSidebarSliders(): Promise<HomeSidebarSliderContent>
     return { featured: null, items: [] };
   }
 
-  const sortedItems = result.data.toSorted(
-    (a, b) => (a.orderNo ?? 0) - (b.orderNo ?? 0),
-  );
+  const sortedItems = sortSliders(result.data);
   const featuredItem = sortedItems.find((item) => item.eventImage);
 
   return {
     featured: featuredItem
       ? {
           imageUrl: resolveAssetUrl(featuredItem.eventImage),
-          href: featuredItem.eventRedirectionLink ?? resolveSliderHref(featuredItem),
+          href:
+            localizeFrontendHref(featuredItem.eventRedirectionLink) ??
+            resolveSliderHref(featuredItem),
           alt: featuredItem.name,
         }
       : null,
     items: sortedItems
       .filter((item) => item !== featuredItem)
       .map((item, index) => ({
-        id: item.gameCategoryId ?? item.directUrl ?? item.name ?? String(index),
+        id: `${item.gameCategoryId ?? item.directUrl ?? item.name}-${index}`,
         label: item.name,
         iconUrl: resolveAssetUrl(item.icon),
         href: resolveSliderHref(item),
@@ -70,14 +66,46 @@ export async function getLeftSidebarSliders(): Promise<HomeSidebarSliderContent>
   };
 }
 
+export async function getMiddleNavbarSliders(): Promise<HomeCategoryRailItem[]> {
+  const result = await fetchSlidersByType("middle-navbar");
+
+  if (!result.ok) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[middle-navbar-sliders]", result.message);
+    }
+    return [];
+  }
+
+  return sortSliders(result.data).map((item, index) => ({
+    id: `${item.gameCategoryId ?? item.directUrl ?? item.name}-${index}`,
+    label: item.name,
+    iconUrl: resolveAssetUrl(item.icon),
+    href: resolveSliderHref(item),
+  }));
+}
+
+function fetchSlidersByType(sliderType: "left-sidebar" | "middle-navbar") {
+  return serverFetch<z.infer<typeof sliderListSchema>>(
+    `/sliders?sliderType=${sliderType}`,
+    {
+      next: { revalidate: 300 },
+      parse: (data) => sliderListSchema.parse(data),
+    },
+  );
+}
+
+function sortSliders(items: z.infer<typeof sliderListSchema>) {
+  return items.toSorted((a, b) => (a.orderNo ?? 0) - (b.orderNo ?? 0));
+}
+
 function resolveSliderHref(item: z.infer<typeof sliderSchema>) {
   if (item.directUrl) {
-    return item.directUrl;
+    return localizeFrontendHref(item.directUrl) ?? "/";
   }
 
   const firstSubCategory = item.gameSubCategory?.[0];
   if (firstSubCategory?.url) {
-    return firstSubCategory.url;
+    return localizeFrontendHref(firstSubCategory.url) ?? "/";
   }
 
   if (item.gameCategoryId) {

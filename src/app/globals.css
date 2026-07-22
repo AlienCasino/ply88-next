@@ -161,6 +161,10 @@ input {
   display: none;
 }
 
+.a66-content-reveal {
+  animation: a66-content-reveal 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .a66-nav-mascot {
   filter: drop-shadow(0 5px 5px rgb(0 0 0 / 0.32));
   animation: a66-mascot-bob 2.8s ease-in-out infinite;
@@ -191,6 +195,24 @@ input {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes a66-content-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .a66-content-reveal {
+    animation: none;
   }
 }
 

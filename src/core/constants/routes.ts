@@ -4,9 +4,13 @@ export const routes = {
   register: "/register",
   promotions: "/promotions",
   games: "/games",
+  gamesCategory: "/games-category",
   sports: "/sports",
   profile: "/profile",
   wallet: "/wallet",
   vip: "/vip",
   download: "/download",
+  referral: "/referral",
+  affiliate: "/affiliate",
+  support: "/support",
 } as const;
