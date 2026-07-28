@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { PublicSiteFooter } from "@/shared/components/layout/public-site-footer";
 import type { AppViewer } from "@/shared/components/layout/types";
+import { getGameProviders } from "@/features/game-library/services/providers.service";
 import { getHeroBanners } from "../services/banner.service";
 import { getHomeGameSections } from "../services/home-games.service";
 import {
@@ -17,6 +18,7 @@ import {
 import { HeroSection } from "./hero-section";
 import { NoticeStrip } from "./notice-strip";
 import { PublicHomeShell } from "./public-home-shell";
+import { TopProvidersSection } from "./top-providers-section";
 import {
   categoryRailItems,
   fallbackGameSections,
@@ -43,6 +45,9 @@ export async function PublicHomeScreen({
         </Suspense>
         <Suspense fallback={<HomeGameSectionsSkeleton />}>
           <HomeGames />
+        </Suspense>
+        <Suspense fallback={null}>
+          <HomeTopProviders />
         </Suspense>
         <PublicSiteFooter links={footerLinks} />
       </main>
@@ -80,6 +85,20 @@ async function HomeGames() {
   return (
     <div className="a66-content-reveal">
       <HomeGameSections sections={renderedGameSections} />
+    </div>
+  );
+}
+
+async function HomeTopProviders() {
+  const providerPage = await getGameProviders({ limit: 12 });
+
+  if (providerPage.providers.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="a66-content-reveal">
+      <TopProvidersSection providers={providerPage.providers} />
     </div>
   );
 }

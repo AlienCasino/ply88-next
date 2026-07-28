@@ -39,24 +39,13 @@ export async function getLeftSidebarSliders(): Promise<HomeSidebarSliderContent>
     if (process.env.NODE_ENV !== "production") {
       console.warn("[left-sidebar-sliders]", result.message);
     }
-    return { featured: null, items: [] };
+    return { items: [] };
   }
 
   const sortedItems = sortSliders(result.data);
-  const featuredItem = sortedItems.find((item) => item.eventImage);
 
   return {
-    featured: featuredItem
-      ? {
-          imageUrl: resolveAssetUrl(featuredItem.eventImage),
-          href:
-            localizeFrontendHref(featuredItem.eventRedirectionLink) ??
-            resolveSliderHref(featuredItem),
-          alt: featuredItem.name,
-        }
-      : null,
     items: sortedItems
-      .filter((item) => item !== featuredItem)
       .map((item, index) => ({
         id: `${item.gameCategoryId ?? item.directUrl ?? item.name}-${index}`,
         label: item.name,
@@ -66,7 +55,9 @@ export async function getLeftSidebarSliders(): Promise<HomeSidebarSliderContent>
   };
 }
 
-export async function getMiddleNavbarSliders(): Promise<HomeCategoryRailItem[]> {
+export async function getMiddleNavbarSliders(): Promise<
+  HomeCategoryRailItem[]
+> {
   const result = await fetchSlidersByType("middle-navbar");
 
   if (!result.ok) {

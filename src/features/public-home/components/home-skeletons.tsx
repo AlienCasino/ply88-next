@@ -53,32 +53,10 @@ export function CategoryRailSkeleton() {
 export function HomeGameSectionsSkeleton() {
   return (
     <>
-      <GameSectionSkeleton />
-      <GameSectionSkeleton />
+      <GameSliderSectionSkeleton />
+      <GameSliderSectionSkeleton />
       <GameSliderSectionSkeleton />
     </>
-  );
-}
-
-function GameSectionSkeleton() {
-  return (
-    <section className="mt-4 px-3" aria-hidden="true">
-      <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Skeleton className={`size-6 rounded-full ${glassSkeleton}`} />
-          <Skeleton className={`h-6 w-28 rounded-[5px] ${glassSkeleton}`} />
-        </div>
-        <Skeleton className={`h-4 w-10 rounded-[4px] ${glassSkeleton}`} />
-      </div>
-      <div className="grid grid-cols-3 gap-3">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <Skeleton
-            key={index}
-            className={`aspect-[156/205] rounded-[13px] ${glassSkeleton}`}
-          />
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -90,7 +68,11 @@ function GameSliderSectionSkeleton() {
           <Skeleton className={`size-6 rounded-full ${glassSkeleton}`} />
           <Skeleton className={`h-6 w-32 rounded-[5px] ${glassSkeleton}`} />
         </div>
-        <Skeleton className={`h-5 w-14 rounded-[5px] ${glassSkeleton}`} />
+        <div className="flex items-center gap-1.5">
+          <Skeleton className={`h-4 w-16 rounded-[4px] ${glassSkeleton}`} />
+          <Skeleton className={`size-7 rounded-full ${glassSkeleton}`} />
+          <Skeleton className={`size-7 rounded-full ${glassSkeleton}`} />
+        </div>
       </div>
       <div className="flex gap-3 overflow-hidden pr-2">
         {Array.from({ length: 4 }).map((_, index) => (

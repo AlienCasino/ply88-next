@@ -1,15 +1,11 @@
 "use client";
 
 import {
-  CircleHelp,
   Clock3,
-  Download,
   Fish,
   Flame,
   Gamepad2,
   Gem,
-  Headphones,
-  Info,
   Share2,
   Spade,
   Star,
@@ -18,11 +14,9 @@ import {
   UsersRound,
   WalletCards,
 } from "lucide-react";
-import { routes } from "@/core/constants/routes";
 import type {
   HomeDrawerAction,
   HomeDrawerCategory,
-  HomeDrawerLink,
   HomeDrawerOffer,
 } from "@/shared/components/layout/home-side-drawer";
 
@@ -94,11 +88,4 @@ export const drawerOffers: HomeDrawerOffer[] = [
     badge: "",
     className: "from-[#ffb02e] to-[#ff8a00]",
   },
-];
-
-export const drawerHelpLinks: HomeDrawerLink[] = [
-  { label: "Baixar App", icon: Download, href: routes.download },
-  { label: "Suporte ao Cliente", icon: Headphones, href: routes.profile },
-  { label: "FAQ", icon: CircleHelp, href: routes.profile },
-  { label: "Sobrea66bet", icon: Info, href: routes.profile },
 ];

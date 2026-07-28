@@ -2,8 +2,6 @@ import "server-only";
 
 import { serverEnv } from "@/core/env/env";
 
-const API_FRONTEND_HOSTS = new Set(["dev.sanch9.bet", "a66betl.vip"]);
-
 export function localizeFrontendHref(href: string | null | undefined) {
   const value = href?.trim();
 
@@ -15,11 +13,12 @@ export function localizeFrontendHref(href: string | null | undefined) {
     return value;
   }
 
+  if (serverEnv.useBackendDirectUrls) {
+    return value;
+  }
+
   try {
     const url = new URL(value);
-    if (!API_FRONTEND_HOSTS.has(url.hostname)) {
-      return value;
-    }
 
     if (!serverEnv.frontendUrl) {
       return `${url.pathname}${url.search}${url.hash}`;

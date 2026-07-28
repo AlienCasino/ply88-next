@@ -8,4 +8,6 @@ function readServerEnv(name: string) {
 export const serverEnv = {
   apiUrl: readServerEnv("API_URL") ?? readServerEnv("NEXT_PUBLIC_API_URL"),
   frontendUrl: readServerEnv("NEXT_PUBLIC_FRONTEND_URL"),
+  useBackendDirectUrls:
+    readServerEnv("NEXT_PUBLIC_USE_BACKEND_DIRECT_URLS") === "true",
 } as const;

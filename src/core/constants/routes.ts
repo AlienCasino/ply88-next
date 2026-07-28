@@ -4,6 +4,7 @@ export const routes = {
   register: "/register",
   promotions: "/promotions",
   games: "/games",
+  providers: "/providers",
   gamesCategory: "/games-category",
   sports: "/sports",
   profile: "/profile",

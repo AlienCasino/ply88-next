@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import {
+  Activity,
   BadgeDollarSign,
   ChevronRight,
   CircleHelp,
+  Clock3,
   Download,
+  Flame,
   Gift,
   Headphones,
   History,
@@ -241,53 +244,222 @@ function PromotionsScreen() {
 }
 
 function SportsScreen() {
-  const matches = [
-    ["Brasil Série A", "Flamengo", "Palmeiras", "2.16", "3.10", "2.80"],
-    ["Copa", "São Paulo", "Santos", "1.92", "3.25", "3.40"],
-    ["Futebol Virtual", "Time A66", "Fortune FC", "2.05", "3.00", "2.95"],
+  const matches: SportMatch[] = [
+    {
+      id: "brasileirao-flamengo-palmeiras",
+      league: "Brasil Serie A",
+      time: "Hoje 21:00",
+      home: "Flamengo",
+      away: "Palmeiras",
+      score: "0 - 0",
+      live: true,
+      trend: "+18 mercados",
+      odds: [
+        ["Casa", "2.16"],
+        ["Empate", "3.10"],
+        ["Fora", "2.80"],
+      ],
+    },
+    {
+      id: "copa-sao-paulo-santos",
+      league: "Copa",
+      time: "Amanha 19:30",
+      home: "Sao Paulo",
+      away: "Santos",
+      score: "Pre-jogo",
+      trend: "+12 mercados",
+      odds: [
+        ["Casa", "1.92"],
+        ["Empate", "3.25"],
+        ["Fora", "3.40"],
+      ],
+    },
+    {
+      id: "virtual-a66-fortune",
+      league: "Futebol Virtual",
+      time: "Em 08 min",
+      home: "Time A66",
+      away: "Fortune FC",
+      score: "Simulado",
+      trend: "+9 mercados",
+      odds: [
+        ["Casa", "2.05"],
+        ["Empate", "3.00"],
+        ["Fora", "2.95"],
+      ],
+    },
   ];
 
   return (
     <>
-      <SectionHeader title="Esporte" action="Ao vivo" />
-      <div className="rounded-[8px] bg-[#2c3445] p-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-black">Apostas esportivas</h1>
-            <p className="text-xs text-nav-muted">
-              Mercados demonstrativos, prontos para API futura.
-            </p>
+      <section className="overflow-hidden rounded-[14px] border border-[#344868] bg-[#202733] shadow-[0_12px_30px_rgba(0,0,0,.22)]">
+        <div className="relative min-h-[154px] overflow-hidden bg-[radial-gradient(circle_at_18%_18%,rgba(255,207,84,.28),transparent_26%),radial-gradient(circle_at_90%_8%,rgba(76,127,203,.35),transparent_28%),linear-gradient(145deg,#263146_0%,#1d222c_58%,#151a23_100%)] px-4 py-4">
+          <div className="absolute -right-7 -top-8 size-36 rounded-full border border-brand-gold/20 bg-brand-gold/10 blur-[1px]" />
+          <div className="absolute bottom-3 right-4 grid size-16 place-items-center rounded-full border border-brand-gold/30 bg-[#111722]/45 text-brand-gold shadow-[inset_0_0_18px_rgba(255,207,84,.14)]">
+            <Trophy className="size-9" strokeWidth={1.8} />
           </div>
-          <Trophy className="size-10 text-brand-gold" />
+          <div className="relative z-10 flex items-center justify-between">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-gold">
+              A66 Sports
+            </p>
+            <span className="inline-flex h-7 items-center gap-1.5 rounded-full border border-[#4a6694] bg-[#111722]/55 px-2.5 text-[11px] font-bold text-[#dfe8f5]">
+              <Activity className="size-3.5 text-[#39d98a]" />
+              Ao vivo
+            </span>
+          </div>
+          <h1 className="relative z-10 mt-5 max-w-[250px] text-[25px] font-black leading-[1.05] text-white">
+            Mercados esportivos em destaque
+          </h1>
+          <p className="relative z-10 mt-2 max-w-[255px] text-[12px] font-medium leading-relaxed text-[#9fb8df]">
+            Jogos demonstrativos com layout pronto para ligar aos dados reais.
+          </p>
         </div>
+
+        <div className="grid grid-cols-3 border-t border-[#344868] bg-[#1b212b]/85 text-center">
+          {[
+            ["12", "Ao vivo"],
+            ["48", "Eventos"],
+            ["86", "Mercados"],
+          ].map(([value, label]) => (
+            <div key={label} className="px-2 py-3">
+              <p className="text-[18px] font-black leading-none text-white">
+                {value}
+              </p>
+              <p className="mt-1 text-[10px] font-semibold text-[#8facd9]">
+                {label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="flex items-center justify-between px-1">
+        <div>
+          <h2 className="text-[18px] font-black leading-tight text-white">
+            Partidas populares
+          </h2>
+          <p className="text-[11px] font-medium text-[#8facd9]">
+            Escolha um mercado para simular a aposta
+          </p>
+        </div>
+        <button
+          type="button"
+          className="inline-flex h-8 items-center gap-1 rounded-full border border-[#344868] bg-[#263146] px-3 text-[12px] font-bold text-brand-gold active:scale-95"
+        >
+          <Flame className="size-3.5" />
+          Topo
+        </button>
       </div>
-      <div className="space-y-2">
-        {matches.map(([league, home, away, one, draw, two]) => (
-          <article
-            key={`${home}-${away}`}
-            className="rounded-[8px] bg-[#2c3445] p-3"
-          >
-            <p className="text-[11px] text-brand-gold">{league}</p>
-            <div className="mt-2 flex items-center justify-between gap-2 text-sm font-bold">
-              <span className="truncate">{home}</span>
-              <span className="text-xs text-nav-muted">VS</span>
-              <span className="truncate text-right">{away}</span>
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              {[one, draw, two].map((odd, index) => (
-                <button
-                  key={odd}
-                  type="button"
-                  className="rounded-[6px] bg-[#1d222c] py-2 text-xs font-bold text-brand-gold active:bg-[#344868]"
-                >
-                  {index === 0 ? "Casa" : index === 1 ? "Empate" : "Fora"} {odd}
-                </button>
-              ))}
-            </div>
-          </article>
+
+      <div className="space-y-3">
+        {matches.map((match) => (
+          <SportsMatchCard key={match.id} match={match} />
         ))}
       </div>
     </>
+  );
+}
+
+type SportOdd = [label: string, value: string];
+
+type SportMatch = {
+  id: string;
+  league: string;
+  time: string;
+  home: string;
+  away: string;
+  score: string;
+  live?: boolean;
+  trend: string;
+  odds: SportOdd[];
+};
+
+function SportsMatchCard({ match }: { match: SportMatch }) {
+  return (
+    <article className="overflow-hidden rounded-[12px] border border-[#344868] bg-[#263146] shadow-[0_10px_24px_rgba(0,0,0,.18)]">
+      <div className="flex items-center justify-between border-b border-[#344868]/80 px-3 py-2">
+        <span className="inline-flex min-w-0 items-center gap-1.5 text-[11px] font-bold text-brand-gold">
+          {match.live ? (
+            <span className="size-1.5 rounded-full bg-[#39d98a] shadow-[0_0_8px_rgba(57,217,138,.8)]" />
+          ) : (
+            <Clock3 className="size-3.5 text-[#8facd9]" />
+          )}
+          <span className="truncate">{match.league}</span>
+        </span>
+        <span className="shrink-0 text-[11px] font-semibold text-[#8facd9]">
+          {match.time}
+        </span>
+      </div>
+
+      <div className="px-3 pb-3 pt-3">
+        <div className="grid grid-cols-[1fr_70px_1fr] items-center gap-2">
+          <TeamName name={match.home} align="left" />
+          <div className="grid h-[54px] place-items-center rounded-[10px] border border-[#40587f] bg-[#1d222c]">
+            <span className="text-[12px] font-black text-white">
+              {match.score}
+            </span>
+            <span className="text-[10px] font-semibold uppercase text-[#6e8ab7]">
+              VS
+            </span>
+          </div>
+          <TeamName name={match.away} align="right" />
+        </div>
+
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {match.odds.map(([label, value]) => (
+            <button
+              key={label}
+              type="button"
+              className="group min-w-0 rounded-[9px] border border-[#344868] bg-[#1b212b] px-2 py-2 text-left shadow-[inset_0_-1px_0_rgba(255,255,255,.03)] transition hover:border-brand-gold/70 hover:bg-[#222a37] active:scale-[.98]"
+            >
+              <span className="block truncate text-[10px] font-bold uppercase text-[#8facd9]">
+                {label}
+              </span>
+              <span className="mt-0.5 block text-center text-[15px] font-black leading-none text-brand-gold">
+                {value}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-3 flex items-center justify-between rounded-[8px] bg-[#1d222c]/65 px-3 py-2">
+          <span className="text-[11px] font-semibold text-[#8facd9]">
+            {match.trend}
+          </span>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 text-[11px] font-bold text-brand-gold"
+          >
+            Ver mercados
+            <ChevronRight className="size-3.5" />
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function TeamName({
+  name,
+  align,
+}: {
+  name: string;
+  align: "left" | "right";
+}) {
+  return (
+    <div className={cn("min-w-0", align === "right" && "text-right")}>
+      <div
+        className={cn(
+          "mb-1 inline-grid size-9 place-items-center rounded-full border border-[#40587f] bg-[#1d222c] text-[13px] font-black text-white",
+          align === "right" && "ml-auto",
+        )}
+      >
+        {name.slice(0, 2).toUpperCase()}
+      </div>
+      <p className="truncate text-[13px] font-black leading-tight text-white">
+        {name}
+      </p>
+    </div>
   );
 }
 

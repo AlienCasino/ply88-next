@@ -67,7 +67,7 @@ export function FloatingPromos() {
             </div>
             <span className="grid size-16 place-items-center">
               <Image
-                src="/a66/float-telegram.gif"
+                src="/a66/telegram-gif.webp"
                 alt=""
                 width={60}
                 height={60}

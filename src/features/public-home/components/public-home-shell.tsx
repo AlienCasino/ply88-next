@@ -15,14 +15,13 @@ import type {
 import {
   drawerActions,
   drawerCategories,
-  drawerHelpLinks,
   drawerOffers,
 } from "../data/home-drawer-content";
 
 export function PublicHomeShell({
   viewer = null,
   children,
-  sidebarContent = { featured: null, items: [] },
+  sidebarContent = { items: [] },
 }: {
   viewer?: AppViewer | null;
   children: ReactNode;
@@ -67,7 +66,6 @@ export function PublicHomeShell({
           categories={drawerCategories}
           actions={drawerActions}
           offers={drawerOffers}
-          helpLinks={drawerHelpLinks}
           sliderContent={sidebarContent}
         />
         <FloatingPromos />

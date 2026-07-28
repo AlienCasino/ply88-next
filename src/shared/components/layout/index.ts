@@ -7,12 +7,10 @@ export { PublicSiteFooter } from "./public-site-footer";
 export type {
   HomeDrawerAction,
   HomeDrawerCategory,
-  HomeDrawerLink,
   HomeDrawerOffer,
 } from "./home-side-drawer";
 export type {
   AppViewer,
-  HomeSidebarFeaturedSlider,
   HomeSidebarSliderContent,
   HomeSidebarSliderItem,
 } from "./types";

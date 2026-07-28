@@ -20,10 +20,13 @@ const bannerSchema = z.object({
 const bannerListSchema = z.array(bannerSchema);
 
 export async function getHeroBanners(): Promise<HomeHeroBanner[]> {
-  const result = await serverFetch<z.infer<typeof bannerListSchema>>("/banner", {
-    next: { revalidate: 300 },
-    parse: (data) => bannerListSchema.parse(data),
-  });
+  const result = await serverFetch<z.infer<typeof bannerListSchema>>(
+    "/banner",
+    {
+      next: { revalidate: 300 },
+      parse: (data) => bannerListSchema.parse(data),
+    },
+  );
 
   if (!result.ok) {
     if (process.env.NODE_ENV !== "production") {

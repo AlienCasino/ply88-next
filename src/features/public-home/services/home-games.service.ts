@@ -32,12 +32,6 @@ const homeGameResponseSchema = z.array(apiCategorySchema);
 type ApiGame = z.infer<typeof apiGameSchema>;
 type ApiCategory = z.infer<typeof apiCategorySchema>;
 
-type GroupedCategory = {
-  category: ApiCategory;
-  games: ApiGame[];
-  orderNo: number;
-};
-
 const cardPalettes: Array<[string, string, string]> = [
   ["#e55437", "#f2bf42", "#8b1d48"],
   ["#f55c9d", "#ba2fe8", "#5d2cff"],
@@ -47,7 +41,9 @@ const cardPalettes: Array<[string, string, string]> = [
   ["#2e8efc", "#52d5ff", "#0857bc"],
 ];
 
-export async function getHomeGameSections(): Promise<HomeGameCategorySection[]> {
+export async function getHomeGameSections(): Promise<
+  HomeGameCategorySection[]
+> {
   const result = await serverFetch<z.infer<typeof homeGameResponseSchema>>(
     "/home/game",
     {
@@ -67,9 +63,8 @@ export async function getHomeGameSections(): Promise<HomeGameCategorySection[]> 
 }
 
 function toHomeGameSections(categories: ApiCategory[]) {
-  return Array.from(groupCategoriesByName(categories).values())
-    .toSorted((a, b) => a.orderNo - b.orderNo)
-    .map(({ category, games }, categoryIndex): HomeGameCategorySection => {
+  return categories
+    .map((category, categoryIndex): HomeGameCategorySection => {
       const title =
         cleanText(category.displayName) ||
         cleanText(category.categoryLanguageName) ||
@@ -77,39 +72,15 @@ function toHomeGameSections(categories: ApiCategory[]) {
         "Games";
 
       return {
-        id: `category-${slugify(category.categoryName || category._id)}`,
+        id: `category-${slugify(category.categoryName || category._id)}-${categoryIndex}`,
         title,
         iconUrl: resolveAssetUrl(category.categoryImage),
-        games: sortGames(uniqueGames(games)).map((game, gameIndex) =>
+        games: (category.games ?? []).map((game, gameIndex) =>
           toHomeGameCard(game, categoryIndex, gameIndex),
         ),
       };
     })
     .filter((section) => section.games.length > 0);
-}
-
-function groupCategoriesByName(categories: ApiCategory[]) {
-  return categories.reduce((groups, category) => {
-    const key = slugify(category.categoryName || category._id);
-    const currentGroup = groups.get(key);
-
-    if (currentGroup) {
-      currentGroup.games.push(...(category.games ?? []));
-      currentGroup.orderNo = Math.min(
-        currentGroup.orderNo,
-        category.orderNo ?? Number.MAX_SAFE_INTEGER,
-      );
-      return groups;
-    }
-
-    groups.set(key, {
-      category,
-      games: [...(category.games ?? [])],
-      orderNo: category.orderNo ?? Number.MAX_SAFE_INTEGER,
-    });
-
-    return groups;
-  }, new Map<string, GroupedCategory>());
 }
 
 function toHomeGameCard(
@@ -118,7 +89,9 @@ function toHomeGameCard(
   gameIndex: number,
 ): HomeGameCard {
   const provider =
-    cleanText(game.providerLanguageName) || cleanText(game.providerName) || "Game";
+    cleanText(game.providerLanguageName) ||
+    cleanText(game.providerName) ||
+    "Game";
   const gameKey = game.customGameId ?? game._id;
 
   return {
@@ -133,34 +106,6 @@ function toHomeGameCard(
     colors: cardPalettes[(categoryIndex + gameIndex) % cardPalettes.length],
     mark: provider.slice(0, 4).toUpperCase(),
   };
-}
-
-function uniqueGames(games: ApiGame[]) {
-  const gamesByKey = new Map<string, ApiGame>();
-
-  games.forEach((game) => {
-    gamesByKey.set(game.customGameId ?? game._id, game);
-  });
-
-  return Array.from(gamesByKey.values());
-}
-
-function sortGames(games: ApiGame[]) {
-  return games.toSorted((a, b) => {
-    const orderDifference =
-      (a.orderNo ?? Number.MAX_SAFE_INTEGER) -
-      (b.orderNo ?? Number.MAX_SAFE_INTEGER);
-
-    if (orderDifference !== 0) {
-      return orderDifference;
-    }
-
-    return getGameTitle(a).localeCompare(getGameTitle(b));
-  });
-}
-
-function getGameTitle(game: ApiGame) {
-  return cleanText(game.displayName) || cleanText(game.languageName) || game._id;
 }
 
 function cleanText(value: string | null | undefined) {

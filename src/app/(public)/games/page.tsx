@@ -1,10 +1,16 @@
 import AppShell from "@/design-system/components/app-shell";
-import { GameLibraryScreen } from "@/features/game-library";
+import { GamesPage as GamesFeaturePage } from "@/features/games";
 
-export default function GamesPage() {
+type GamesRouteProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function GamesPage({ searchParams }: GamesRouteProps) {
+  const resolvedSearchParams = await searchParams;
+
   return (
     <AppShell>
-      <GameLibraryScreen />
+      <GamesFeaturePage searchParams={resolvedSearchParams} />
     </AppShell>
   );
 }
