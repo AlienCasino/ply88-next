@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Dialog as DrawerPrimitive } from "radix-ui";
 import { DepositDrawer } from "@/features/deposit/components/deposit-drawer";
 import { FloatingPromos } from "@/shared/components/layout/floating-promos";
@@ -27,23 +27,38 @@ export function PublicHomeShell({
   children: ReactNode;
   sidebarContent?: HomeSidebarSliderContent;
 }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const [depositOpen, setDepositOpen] = useState(false);
   const isAuthenticated = Boolean(viewer);
-  const depositOpen = searchParams.has("deposit");
+
+  useEffect(() => {
+    const syncDepositRoute = () => {
+      setDepositOpen(new URLSearchParams(window.location.search).has("deposit"));
+    };
+    const openDepositFromEvent = () => {
+      setDepositOpen(true);
+      pushDepositSearchParam();
+    };
+
+    syncDepositRoute();
+    window.addEventListener("popstate", syncDepositRoute);
+    window.addEventListener("a66:open-deposit", openDepositFromEvent);
+
+    return () => {
+      window.removeEventListener("popstate", syncDepositRoute);
+      window.removeEventListener("a66:open-deposit", openDepositFromEvent);
+    };
+  }, []);
 
   const openDeposit = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("deposit", "");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    setDepositOpen(true);
+    pushDepositSearchParam();
   };
 
   const closeDeposit = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("deposit");
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    setDepositOpen(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("deposit");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   return (
@@ -69,4 +84,13 @@ export function PublicHomeShell({
       </div>
     </DrawerPrimitive.Root>
   );
+}
+
+function pushDepositSearchParam() {
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("deposit")) {
+    return;
+  }
+  url.searchParams.set("deposit", "");
+  window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }

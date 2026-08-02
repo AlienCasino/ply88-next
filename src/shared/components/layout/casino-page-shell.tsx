@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentProps, ReactNode } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Dialog as DrawerPrimitive } from "radix-ui";
 import AppShell from "@/design-system/components/app-shell";
 import { DepositDrawer } from "@/features/deposit";
@@ -27,22 +27,37 @@ export function CasinoPageShell({
   offers,
   children,
 }: CasinoPageShellProps) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const depositOpen = searchParams.has("deposit");
+  const [depositOpen, setDepositOpen] = useState(false);
+
+  useEffect(() => {
+    const syncDepositRoute = () => {
+      setDepositOpen(new URLSearchParams(window.location.search).has("deposit"));
+    };
+    const openDepositFromEvent = () => {
+      setDepositOpen(true);
+      pushDepositSearchParam();
+    };
+
+    syncDepositRoute();
+    window.addEventListener("popstate", syncDepositRoute);
+    window.addEventListener("a66:open-deposit", openDepositFromEvent);
+
+    return () => {
+      window.removeEventListener("popstate", syncDepositRoute);
+      window.removeEventListener("a66:open-deposit", openDepositFromEvent);
+    };
+  }, []);
 
   const openDeposit = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("deposit", "");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    setDepositOpen(true);
+    pushDepositSearchParam();
   };
 
   const closeDeposit = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("deposit");
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    setDepositOpen(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("deposit");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   return (
@@ -69,4 +84,13 @@ export function CasinoPageShell({
       </AppShell>
     </DrawerPrimitive.Root>
   );
+}
+
+function pushDepositSearchParam() {
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("deposit")) {
+    return;
+  }
+  url.searchParams.set("deposit", "");
+  window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }

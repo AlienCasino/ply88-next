@@ -7,6 +7,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import { routes } from "@/core/constants/routes";
+import { DepositTrigger } from "@/features/deposit";
 import {
   drawerActions,
   drawerCategories,
@@ -104,13 +105,12 @@ export async function ProfilePage() {
             <BalanceLine label="Actual" value={profilePreview.balance.actual} />
             <BalanceLine label="Bonus" value={profilePreview.balance.bonus} />
           </div>
-          <Link
-            href={`${routes.profile}?deposit`}
-            className="mt-3 flex h-11 items-center justify-center gap-2 rounded-[10px] bg-brand-gold text-[16px] font-black text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.1)] transition hover:brightness-105"
+          <DepositTrigger
+            className="mt-3 flex h-11 w-full appearance-none items-center justify-center gap-2 rounded-[10px] border-0 bg-brand-gold text-[16px] font-black text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.1)] transition hover:brightness-105"
           >
             <WalletCards className="size-5" />
             Deposit
-          </Link>
+          </DepositTrigger>
         </section>
 
         <section className="mt-3 grid grid-cols-3 gap-2">
