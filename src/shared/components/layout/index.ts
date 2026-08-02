@@ -1,4 +1,5 @@
 export { BalancePill } from "./balance-pill";
+export { CasinoPageShell } from "./casino-page-shell";
 export { FloatingPromos } from "./floating-promos";
 export { HomeBottomNav } from "./home-bottom-nav";
 export { HomeHeader } from "./home-header";

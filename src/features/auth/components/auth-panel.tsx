@@ -2,8 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Eye, EyeOff, LockKeyhole, UserRound, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  UserRound,
+  X,
+} from "lucide-react";
 import { useMemo, useState } from "react";
+import { routes } from "@/core/constants/routes";
 import { Button } from "@/design-system/primitives/button";
 import { accountSummary } from "@/data";
 import { cn } from "@/shared/lib/utils";
@@ -72,23 +80,17 @@ export function AuthPanel({ initialMode = "register", asPage = false, onClose }:
       )}
       style={{ "--auth-bg": "url('/a66/login-bg.avif')" } as React.CSSProperties}
     >
-      <div className="flex h-8 items-center justify-between">
+      <div className="flex h-10 items-center justify-between">
         {asPage ? (
-          <Link
-            href="/"
-            className="grid size-8 place-items-center rounded-full text-nav-muted outline-none ring-brand-gold/40 focus-visible:ring-2"
-            aria-label="Voltar"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
+          <AuthBackLink />
         ) : (
           <button
             type="button"
             onClick={onClose}
-            className="grid size-8 place-items-center rounded-full text-nav-muted outline-none ring-brand-gold/40 focus-visible:ring-2"
+            className="group inline-flex h-10 items-center gap-2 rounded-[10px] border border-[#344868] bg-[#222832]/85 px-2.5 text-[#8facd9] shadow-[inset_0_1px_0_rgba(255,255,255,.04)] outline-none ring-brand-gold/40 transition hover:border-brand-gold/45 hover:text-white focus-visible:ring-2"
             aria-label="Fechar"
           >
-            <X className="size-5" />
+            <X className="size-[18px]" />
           </button>
         )}
       </div>
@@ -257,6 +259,18 @@ export function AuthPanel({ initialMode = "register", asPage = false, onClose }:
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55">
       <div className="w-full max-w-[var(--app-max-width)]">{content}</div>
     </div>
+  );
+}
+
+function AuthBackLink() {
+  return (
+    <Link
+      href={routes.home}
+      className="-ml-3 grid size-10 place-items-center rounded-[10px] border border-[#344868] bg-[#222832]/85 text-brand-gold shadow-[inset_0_1px_0_rgba(255,255,255,.04),0_10px_22px_rgba(0,0,0,.18)] outline-none ring-brand-gold/40 transition hover:border-brand-gold/45 hover:bg-[#263146] focus-visible:ring-2"
+      aria-label="Voltar para a página inicial"
+    >
+      <ArrowLeft className="size-5" strokeWidth={2.2} />
+    </Link>
   );
 }
 

@@ -25,14 +25,20 @@ export function HomeHeader({
           <PanelLeftClose className="size-6" strokeWidth={1.9} />
         </button>
       </DrawerPrimitive.Trigger>
-      <Image
-        src="/a66/logo-home.png"
-        alt="A66BET"
-        width={198}
-        height={60}
-        priority
-        className="h-[39px] w-auto"
-      />
+      <Link
+        href={routes.home}
+        aria-label="A66BET home"
+        className="inline-flex shrink-0 items-center rounded-[6px] outline-none ring-brand-gold/40 focus-visible:ring-2"
+      >
+        <Image
+          src="/a66/logo-home.png"
+          alt="A66BET"
+          width={198}
+          height={60}
+          priority
+          className="h-[39px] w-auto"
+        />
+      </Link>
       {viewer ? (
         <div className="ml-auto flex min-w-0 items-center gap-2">
           <BalancePill balance={viewer.balance} />

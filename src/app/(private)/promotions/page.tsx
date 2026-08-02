@@ -1,10 +1,24 @@
 import AppShell from "@/design-system/components/app-shell";
-import { PrivateCasinoExperience } from "@/features/private-lobby";
+import { PromotionsPage as PromotionsFeaturePage } from "@/features/promotions";
 
-export default function PromotionsPage() {
+type PromotionsRouteProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function PromotionsPage({
+  searchParams,
+}: PromotionsRouteProps) {
+  const resolvedSearchParams = await searchParams;
+
   return (
     <AppShell>
-      <PrivateCasinoExperience screen="promotions" />
+      <PromotionsFeaturePage
+        category={asString(resolvedSearchParams?.category)}
+      />
     </AppShell>
   );
+}
+
+function asString(value: string | string[] | undefined) {
+  return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
 }

@@ -1,10 +1,5 @@
-import AppShell from "@/design-system/components/app-shell";
-import { PrivateCasinoExperience } from "@/features/private-lobby";
+import { ProfilePage as ProfilePageScreen } from "@/features/profile";
 
 export default function ProfilePage() {
-  return (
-    <AppShell>
-      <PrivateCasinoExperience screen="profile" />
-    </AppShell>
-  );
+  return <ProfilePageScreen />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Dialog as DrawerPrimitive } from "radix-ui";
 import { DepositDrawer } from "@/features/deposit/components/deposit-drawer";
 import { FloatingPromos } from "@/shared/components/layout/floating-promos";
@@ -27,32 +27,23 @@ export function PublicHomeShell({
   children: ReactNode;
   sidebarContent?: HomeSidebarSliderContent;
 }) {
-  const [depositOpen, setDepositOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const isAuthenticated = Boolean(viewer);
-
-  useEffect(() => {
-    const syncDepositRoute = () => {
-      setDepositOpen(new URLSearchParams(window.location.search).has("deposit"));
-    };
-
-    syncDepositRoute();
-    window.addEventListener("popstate", syncDepositRoute);
-
-    return () => window.removeEventListener("popstate", syncDepositRoute);
-  }, []);
+  const depositOpen = searchParams.has("deposit");
 
   const openDeposit = () => {
-    setDepositOpen(true);
-    const url = new URL(window.location.href);
-    url.searchParams.set("deposit", "");
-    window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("deposit", "");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const closeDeposit = () => {
-    setDepositOpen(false);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("deposit");
-    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("deposit");
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
   return (
