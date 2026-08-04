@@ -227,14 +227,6 @@ function ProviderCard({ provider }: { provider: GameProvider }) {
           </span>
         )}
       </div>
-      <div className="relative">
-        <p className="truncate text-[13px] font-black leading-tight text-white drop-shadow">
-          {provider.name}
-        </p>
-        <p className="mt-1 text-[11px] font-semibold leading-none text-brand-gold">
-          {provider.totalGameCount} games
-        </p>
-      </div>
     </Link>
   );
 }

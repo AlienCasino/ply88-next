@@ -47,12 +47,6 @@ export function GameTile({
       <span className="absolute right-1 top-1 grid size-6 place-items-center rounded-full bg-white/35 text-brand-gold">
         ★
       </span>
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-3 pb-4 pt-10">
-        <p className="truncate text-base font-black text-white drop-shadow">
-          {name}
-        </p>
-        <p className="text-xs font-bold text-white/75">{brand}</p>
-      </div>
     </Link>
   );
 }

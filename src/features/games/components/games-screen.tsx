@@ -285,14 +285,6 @@ function GameCard({ game }: { game: CasinoGame }) {
       <span className="absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-white/35 text-brand-gold">
         <Star className="size-3.5 fill-brand-gold" />
       </span>
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/32 to-transparent px-2 pb-3 pt-10">
-        <p className="truncate text-[13px] font-black leading-tight text-white drop-shadow">
-          {game.name}
-        </p>
-        <p className="mt-1 truncate text-[11px] font-semibold leading-none text-white/75">
-          {game.providerName}
-        </p>
-      </div>
     </Link>
   );
 }
