@@ -16,6 +16,7 @@ type CasinoPageShellProps = {
   categories: ComponentProps<typeof HomeSideDrawer>["categories"];
   actions: ComponentProps<typeof HomeSideDrawer>["actions"];
   offers: ComponentProps<typeof HomeSideDrawer>["offers"];
+  showHeader?: boolean;
   children: ReactNode;
 };
 
@@ -25,6 +26,7 @@ export function CasinoPageShell({
   categories,
   actions,
   offers,
+  showHeader = true,
   children,
 }: CasinoPageShellProps) {
   const [depositOpen, setDepositOpen] = useState(false);
@@ -64,9 +66,11 @@ export function CasinoPageShell({
     <DrawerPrimitive.Root>
       <AppShell>
         <div className="a66-home relative min-h-dvh text-white">
-          <div className="sticky top-0 z-40">
-            <HomeHeader viewer={viewer} onDeposit={openDeposit} />
-          </div>
+          {showHeader ? (
+            <div className="sticky top-0 z-40">
+              <HomeHeader viewer={viewer} onDeposit={openDeposit} />
+            </div>
+          ) : null}
           {children}
           <HomeSideDrawer
             categories={categories}

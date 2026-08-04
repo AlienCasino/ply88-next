@@ -32,14 +32,14 @@ export function HomeBottomNav({
   const items: HomeBottomNavItem[] = authenticated
     ? [
         { label: "Começar", icon: Home, href: routes.home },
-        { label: "Ofertas", icon: Gift, href: routes.promotions },
+        { label: "Ofertas", icon: Gift, href: routes.offer },
         { label: "Depósito", icon: WalletCards, action: onDeposit },
         { label: "Saques", icon: TicketPercent, href: routes.wallet },
         { label: "Perfil", icon: CircleUserRound, href: routes.profile },
       ]
     : [
         { label: "Começar", icon: Home, href: routes.home },
-        { label: "Ofertas", icon: Gift, href: routes.promotions },
+        { label: "Ofertas", icon: Gift, href: routes.offer },
         { label: "Login", icon: DoorOpen, href: routes.login },
         { label: "Registro", icon: CircleUserRound, href: routes.register },
         { label: "Perfil", icon: Search, href: routes.profile },
@@ -53,6 +53,8 @@ export function HomeBottomNav({
           const isActive = item.href
             ? item.href === routes.home
               ? pathname === routes.home
+              : item.href === routes.offer
+                ? pathname.startsWith("/offer")
               : pathname.startsWith(item.href)
             : false;
           const className = `relative flex h-full min-w-0 appearance-none flex-col items-center justify-center gap-1 overflow-hidden px-1 pt-1 text-center text-[11px] font-medium leading-none outline-none transition-colors hover:text-white focus-visible:text-white ${

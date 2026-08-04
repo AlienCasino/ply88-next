@@ -1,10 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowRight,
-  BadgeCheck,
-  Shield,
+  BadgeHelp,
+  ChevronLeft,
+  ChevronRight,
+  CircleUserRound,
+  Copy,
+  Database,
+  FileText,
+  Headphones,
+  Info,
+  Landmark,
+  Laptop,
+  LogOut,
+  MessageCircle,
+  NotebookPen,
+  PiggyBank,
+  RefreshCw,
+  ShieldCheck,
   WalletCards,
+  WalletMinimal,
 } from "lucide-react";
 import { routes } from "@/core/constants/routes";
 import { DepositTrigger } from "@/features/deposit";
@@ -15,15 +30,86 @@ import {
 } from "@/features/public-home/data/home-drawer-content";
 import { getLeftSidebarSliders } from "@/features/public-home/services/sliders.service";
 import { CasinoPageShell } from "@/shared/components/layout";
-import {
-  profilePreview,
-  profilePrimaryItems,
-  profileQuickStats,
-} from "../data/profile-content";
+import { profilePreview } from "../data/profile-content";
 
 const profileViewer = {
-  balance: profilePreview.balance.total,
+  balance: "0,00",
 };
+
+const walletActions = [
+  { label: "Withdrawals", icon: WalletMinimal, href: routes.wallet },
+  { label: "Deposit", icon: WalletCards, deposit: true },
+  { label: "Interest", icon: PiggyBank, href: "/offer/interest", badge: "100%" },
+  { label: "Fund", icon: Landmark, href: "/offer/fund", badge: "50%" },
+];
+
+const accountRows = [
+  {
+    label: "My Records",
+    icon: FileText,
+    iconClassName: "text-[#ffaa09]",
+    detail: "Details, bets, reports, recover balance",
+    href: `${routes.report}?reportCurrent=3`,
+  },
+  {
+    label: "Withdrawal Management",
+    icon: WalletCards,
+    iconClassName: "text-[#ff5347]",
+    href: routes.wallet,
+  },
+];
+
+const menuRows = [
+  {
+    label: "Promotion",
+    icon: CircleUserRound,
+    iconClassName: "text-brand-gold",
+    href: routes.promote,
+  },
+  {
+    label: "Third-party platform guarantee",
+    icon: ShieldCheck,
+    iconClassName: "text-[#12d94c]",
+    href: routes.claim,
+  },
+  {
+    label: "Data",
+    icon: Database,
+    iconClassName: "text-brand-gold",
+    href: routes.profileData,
+  },
+  {
+    label: "Security",
+    icon: ShieldCheck,
+    iconClassName: "text-brand-gold",
+    href: routes.profileSecurity,
+  },
+  {
+    label: "FAQ",
+    icon: BadgeHelp,
+    iconClassName: "text-brand-gold",
+  },
+  {
+    label: "Suggestion Bonus",
+    icon: NotebookPen,
+    iconClassName: "text-brand-gold",
+  },
+  {
+    label: "Log in on device",
+    icon: Laptop,
+    iconClassName: "text-brand-gold",
+  },
+  {
+    label: "About A66BET",
+    icon: Info,
+    iconClassName: "text-brand-gold",
+  },
+  {
+    label: "Logout",
+    icon: LogOut,
+    iconClassName: "text-brand-gold",
+  },
+];
 
 export async function ProfilePage() {
   const sidebarContent = await getLeftSidebarSliders();
@@ -35,121 +121,144 @@ export async function ProfilePage() {
       actions={drawerActions}
       offers={drawerOffers}
       sidebarContent={sidebarContent}
+      showHeader={false}
     >
-      <main className="px-3 pb-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom)+22px)] pt-3">
-        <section className="overflow-hidden rounded-[16px] border border-[#344868] bg-[#202733] shadow-[0_18px_42px_rgba(0,0,0,.28)]">
-          <div className="relative overflow-hidden px-3 py-3">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(255,207,84,.18),transparent_30%),radial-gradient(circle_at_86%_0%,rgba(143,172,217,.14),transparent_30%),linear-gradient(145deg,#263146_0%,#1d2532_66%,#151b25_100%)]" />
-            <div className="relative flex items-start gap-3">
-              <div className="relative size-[58px] shrink-0 rounded-[14px] bg-gradient-to-br from-brand-gold via-[#ffb431] to-[#263146] p-[2px] shadow-[0_0_22px_rgba(255,207,84,.18)]">
-                <Image
-                  src="/a66/icon.png"
-                  alt=""
-                  width={58}
-                  height={58}
-                  className="size-full rounded-[12px] border-2 border-[#151b25] object-cover"
-                />
-                <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full border border-brand-gold/35 bg-[#1d222c]">
-                  <BadgeCheck className="size-3.5 text-brand-gold" />
-                </span>
-              </div>
-
-              <div className="min-w-0 flex-1 pt-1">
-                <div className="flex items-start gap-2">
-                  <div className="min-w-0 flex-1">
-                    <h1 className="truncate text-[16px] font-black leading-tight text-white">
-                      {profilePreview.username}
-                    </h1>
-                    <p className="mt-1 text-[11px] font-black uppercase tracking-[0.1em] text-brand-gold">
-                      Perfil da conta
-                    </p>
-                  </div>
-                  <Link
-                    href={routes.vipLevel}
-                    className="grid h-9 shrink-0 place-items-center rounded-[8px] border border-brand-gold/35 bg-brand-gold/10 px-3 text-xs font-black text-brand-gold transition hover:bg-brand-gold/15"
-                    aria-label="View VIP level"
-                  >
-                    VIP
-                  </Link>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <span className="grid size-8 place-items-center rounded-[9px] bg-[#151b25] text-brand-gold shadow-[inset_0_0_0_1px_rgba(255,207,84,.18)]">
-                      <Shield className="size-[18px]" />
-                    </span>
-                    <span className="truncate text-[22px] font-black leading-none text-white">
-                      {profilePreview.level}
-                    </span>
-                  </div>
-                  <div className="min-w-[54px] rounded-full border border-[#344868] bg-[#151b25]/75 px-2 py-1 text-center text-[12px] font-black text-[#8facd9]">
-                    {profilePreview.progress}% XP
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-3 overflow-hidden rounded-[16px] border border-[#344868] bg-[#202733] p-3 shadow-[0_14px_32px_rgba(0,0,0,.24)]">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <span className="text-[12px] font-black uppercase tracking-[0.11em] text-[#8facd9]">
-              Saldo total
-            </span>
-            <span className="flex items-center gap-1 text-[25px] font-black leading-none text-brand-gold">
-              <CoinIcon />
-              {profilePreview.balance.total}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <BalanceLine label="Actual" value={profilePreview.balance.actual} />
-            <BalanceLine label="Bonus" value={profilePreview.balance.bonus} />
-          </div>
-          <DepositTrigger
-            className="mt-3 flex h-11 w-full appearance-none items-center justify-center gap-2 rounded-[10px] border-0 bg-brand-gold text-[16px] font-black text-[#1d222c] shadow-[inset_0_-2px_0_rgba(0,0,0,.1)] transition hover:brightness-105"
-          >
-            <WalletCards className="size-5" />
-            Deposit
-          </DepositTrigger>
-        </section>
-
-        <section className="mt-3 grid grid-cols-3 gap-2">
-          {profileQuickStats.map(({ label, value, icon: Icon }) => (
-            <div
-              key={label}
-              className="rounded-[10px] border border-[#344868] bg-[#263146] px-2 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.04)]"
+      <main className="min-h-dvh bg-[#1f2530] pb-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom)+8px)] text-white">
+        <section className="relative overflow-hidden bg-[#353b44] px-4 pb-4 pt-1">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_22%_-12%,rgba(255,255,255,.18),transparent_40%),radial-gradient(ellipse_at_85%_18%,rgba(255,255,255,.09),transparent_36%),repeating-radial-gradient(circle_at_84%_-20%,rgba(255,255,255,.12)_0_1px,transparent_1px_42px)]" />
+          <div className="relative flex h-9 items-center justify-between">
+            <Link
+              href={routes.home}
+              aria-label="Back home"
+              className="grid size-8 place-items-center text-[#9ab7e4]"
             >
-              <Icon className="mx-auto size-5 text-brand-gold" />
-              <p className="mt-1 truncate text-[11px] text-[#8facd9]">{label}</p>
-              <p className="mt-0.5 truncate text-sm font-black text-white">
-                {value}
-              </p>
+              <ChevronLeft className="size-6" />
+            </Link>
+            <div className="flex items-center gap-4 text-brand-gold">
+              <Headphones className="size-6" />
+              <MessageCircle className="size-6 fill-brand-gold/20" />
             </div>
+          </div>
+
+          <div className="relative mt-2 flex items-center gap-3">
+            <div className="relative size-[58px] shrink-0 rounded-full bg-[#7d4bec] p-[2px] shadow-[0_6px_16px_rgba(0,0,0,.35)]">
+              <Image
+                src="/a66/bottom-mascot-right.png"
+                alt=""
+                width={58}
+                height={58}
+                className="size-full rounded-full bg-[#27303d] object-cover"
+              />
+              <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full bg-brand-gold text-[#1d222c]">
+                <NotebookPen className="size-3.5" />
+              </span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <span className="truncate text-[15px] font-medium text-white">
+                  {profilePreview.username}
+                </span>
+                <ChevronRight className="size-4 rotate-90 fill-[#5878ae] text-[#5878ae]" />
+                <Copy className="size-4 text-brand-gold" />
+              </div>
+              <div className="mt-1 flex items-center gap-1.5 text-[17px] text-[#dbe5f4]">
+                <span>ID: 826261745</span>
+                <Copy className="size-4 text-brand-gold" />
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 text-[18px] font-medium text-white">
+              <span className="grid size-6 place-items-center rounded-full bg-[#2cab44] text-[10px] font-black text-brand-gold shadow-[inset_0_0_0_2px_#f0d04f]">
+                BR
+              </span>
+              <span className="text-white underline decoration-brand-gold decoration-2 underline-offset-4">
+                0,00
+              </span>
+              <RefreshCw className="size-5 fill-brand-gold text-[#1d222c]" />
+            </div>
+          </div>
+
+          <div className="relative mt-5 grid grid-cols-4 gap-2 text-center">
+            {walletActions.map(({ label, icon: Icon, href, deposit, badge }) => {
+              const content = (
+                <>
+                  <span className="relative mx-auto grid size-8 place-items-center text-brand-gold">
+                    <Icon className="size-7" strokeWidth={1.9} />
+                    {badge ? (
+                      <span
+                        className={`absolute -right-2 -top-2 rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none text-white ${
+                          badge === "100%" ? "bg-[#18c928]" : "bg-[#ffaa09]"
+                        }`}
+                      >
+                        {badge}
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="mt-1 block truncate text-[13px] text-white">
+                    {label}
+                  </span>
+                </>
+              );
+
+              if (deposit) {
+                return (
+                  <DepositTrigger
+                    key={label}
+                    className="appearance-none text-center"
+                  >
+                    {content}
+                  </DepositTrigger>
+                );
+              }
+
+              return (
+                <Link key={label} href={href ?? routes.profile}>
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
+
+          <Link
+            href="/offer/vip"
+            className="relative mt-3 block overflow-hidden rounded-[10px] bg-brand-gold px-4 py-3 text-[#1d222c] shadow-[0_8px_18px_rgba(0,0,0,.2)]"
+          >
+            <div className="absolute inset-0 opacity-35 [background:repeating-radial-gradient(circle_at_86%_120%,rgba(255,255,255,.7)_0_1px,transparent_1px_13px)]" />
+            <div className="relative grid grid-cols-[44px_1fr_150px_20px] items-center gap-3">
+              <ShieldCheck className="size-9 text-[#56d8cf]" />
+              <div>
+                <p className="text-[23px] font-black italic leading-none">V0</p>
+                <div className="mt-4 space-y-1">
+                  <ProgressLine label="0,00/100,00" />
+                  <ProgressLine label="0,00/1.000,00" />
+                </div>
+              </div>
+              <div className="text-[12px]">
+                <p className="mb-5 text-[14px]">
+                  Level Bonus <span className="ml-1 text-[16px]">1,00</span>
+                </p>
+                <p>
+                  VIP requires <span className="underline">Deposit</span>{" "}
+                  <b>100,00</b>
+                </p>
+                <p className="mt-1">
+                  VIP requires <span className="underline">Bets</span>{" "}
+                  <b>1.000,00</b>
+                </p>
+              </div>
+              <ChevronRight className="size-6 text-[#6a5a1e]" />
+            </div>
+          </Link>
+        </section>
+
+        <section className="bg-[#1f2530] px-4 py-3">
+          {accountRows.map((row) => (
+            <ProfileRow key={row.label} {...row} />
           ))}
         </section>
 
-        <section className="mt-3 space-y-2">
-          {profilePrimaryItems.map(({ label, icon: Icon, badge, suffixIcon: SuffixIcon }) => (
-            <button
-              key={label}
-              type="button"
-              className="flex h-[54px] w-full items-center gap-3 rounded-[10px] border border-[#344868] bg-[#202733] px-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,.04)] transition hover:border-brand-gold/35 hover:bg-[#263146]"
-            >
-              <Icon className="size-5 shrink-0 text-[#9fc0f4]" strokeWidth={1.9} />
-              <span className="min-w-0 flex-1 truncate text-[15px] font-bold text-white">
-                {label}
-              </span>
-              {badge ? (
-                <span className="grid size-5 shrink-0 place-items-center rounded-full bg-brand-gold text-[11px] font-black text-[#1d222c]">
-                  {badge}
-                </span>
-              ) : null}
-              {SuffixIcon ? (
-                <SuffixIcon className="size-5 shrink-0 text-[#8facd9]" />
-              ) : (
-                <ArrowRight className="size-5 shrink-0 text-[#476792]" />
-              )}
-            </button>
+        <section className="border-t-[12px] border-[#2b3342] bg-[#1f2530] px-4 py-3">
+          {menuRows.map((row) => (
+            <ProfileRow key={row.label} {...row} />
           ))}
         </section>
       </main>
@@ -157,22 +266,45 @@ export async function ProfilePage() {
   );
 }
 
-function BalanceLine({ label, value }: { label: string; value: string }) {
+function ProfileRow({
+  label,
+  icon: Icon,
+  iconClassName,
+  detail,
+  href = routes.profile,
+}: {
+  label: string;
+  icon: typeof CircleUserRound;
+  iconClassName: string;
+  detail?: string;
+  href?: string;
+}) {
   return (
-    <div className="rounded-[9px] border border-[#344868]/80 bg-[#151b25]/70 px-2.5 py-2">
-      <span className="block truncate text-[11px] font-bold text-[#8facd9]">{label}</span>
-      <span className="mt-1 flex items-center gap-1 text-[15px] font-black text-white">
-        <CoinIcon />
-        {value}
+    <Link
+      href={href}
+      className="flex min-h-[50px] items-center gap-3 rounded-[7px] px-3 transition hover:bg-[#263146]"
+    >
+      <Icon className={`size-6 shrink-0 ${iconClassName}`} strokeWidth={1.9} />
+      <span className="min-w-0 flex-1 text-[15px] font-medium leading-tight text-white">
+        {label}
       </span>
-    </div>
+      {detail ? (
+        <span className="max-w-[174px] truncate text-right text-[14px] leading-tight text-brand-gold">
+          {detail}
+        </span>
+      ) : null}
+      <ChevronRight className="size-5 shrink-0 text-[#5878ae]" />
+    </Link>
   );
 }
 
-function CoinIcon() {
+function ProgressLine({ label }: { label: string }) {
   return (
-    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-[#ffac20] text-[10px] font-black text-white shadow-[inset_0_0_0_2px_rgba(255,255,255,.34)]">
-      R$
-    </span>
+    <div className="relative h-3 overflow-hidden rounded-full bg-[#c9b554]">
+      <div className="absolute inset-y-0 left-0 w-[4%] rounded-full bg-[#f4e496]" />
+      <span className="absolute inset-0 grid place-items-center text-[11px] leading-none">
+        {label}
+      </span>
+    </div>
   );
 }

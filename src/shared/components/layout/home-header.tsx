@@ -41,7 +41,13 @@ export function HomeHeader({
       </Link>
       {viewer ? (
         <div className="ml-auto flex min-w-0 items-center gap-2">
-          <BalancePill balance={viewer.balance} />
+          <Link
+            href={`${routes.report}?reportCurrent=1`}
+            aria-label="Open account report"
+            className="rounded-full outline-none ring-brand-gold/40 focus-visible:ring-2"
+          >
+            <BalancePill balance={viewer.balance} />
+          </Link>
           <button
             type="button"
             onClick={onDeposit}
