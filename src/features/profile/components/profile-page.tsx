@@ -88,11 +88,13 @@ const menuRows = [
     label: "FAQ",
     icon: BadgeHelp,
     iconClassName: "text-brand-gold",
+    href: routes.profileFaq,
   },
   {
     label: "Suggestion Bonus",
     icon: NotebookPen,
     iconClassName: "text-brand-gold",
+    href: `${routes.profileFaq}?tab=suggestion`,
   },
   {
     label: "Log in on device",

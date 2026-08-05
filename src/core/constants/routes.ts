@@ -16,6 +16,7 @@ export const routes = {
   sports: "/sports",
   profile: "/profile",
   profileData: "/profile/data",
+  profileFaq: "/profile/faq",
   profileSecurity: "/profile/security",
   wallet: "/wallet",
   report: "/home/report",
